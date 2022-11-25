@@ -1,8 +1,8 @@
 # team03
 Repository for the course project done as part of CS-251 (Software Systems Lab) course at IIT Bombay in Autumn 2022.
-A Course Management System similar to Moodle created by Subhash,Praneeth,Hanvitha .We used Django Framework for the backend and HTML,Bootstrap library for the frontend.
+A Course Management System similar to Moodle created by Subhash, Praneeth, Hanvitha .We used Django Framework for the backend and HTML,Bootstrap library for the frontend.
 
-## Basic Commands
+## Basic Commands:
 Open directory CS251 and then run commands <br>
 python3 manage.py makemigrations <br>
 python3 manage.py migrate <br>

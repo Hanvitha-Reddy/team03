@@ -4,7 +4,7 @@ A Course Management System similar to Moodle created by Subhash, Praneeth, Hanvi
 We used Django Framework for the backend and HTML,Bootstrap library for the frontend.
 
 ## Ruuning Commands:
-Open directory CS251 and then run commands <br>
+Open directory django/CS251 and then run commands <br>
 python3 manage.py makemigrations <br>
 python3 manage.py migrate <br>
 python3 manage.py migrate --run-syncdb <br>

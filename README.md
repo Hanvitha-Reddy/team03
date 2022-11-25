@@ -4,20 +4,13 @@ A Course Management System similar to Moodle created by Subhash,Praneeth,Hanvith
 
 ##Key Features:
 
-###Authentication
-To use the Course management page first of all each user should register account with name,username,mail id and identity whether he/she is a teacher or a student 
-First things first, you’re providing a service. Users need to sign up and then log in. Any data relevant to a user must be accessed in authenticated sessions only.
+### Authentication
+We have used django-rest-auth for authentication and tokenization of users. To use the Course management page first of all each user should register their account with name, username, year of study, email id and identity whether he/she is a teacher or a student and then login with username,password and correct identity whether teacher or student(this is done to avoid confusion when a teaching assistant (teacher) who can also be a student for other courses) which then takes to the respective home pages 
 
-
-Once a user is in, they can create a course and add other users, either as teachers or students. To start with, this can be done utilizing an access code (course code) (which can be shared through means that don’t involve your tool), or, bonus, if you’re feeling ambitious, you can allow the course creator to invite teachers/students themselves, via email invitation.
-
-
-Now that a course is set up, it is clear that teachers and students will have different levels of access to the course. This distinction between student and teacher could vary from course to course. (Assigning TA roles to students to grade/ make announcements)
-
-
-We have used django-rest-auth for authentication and tokenization of users. To use all the features of our server, each user has to signup and login first.
-
-Courses, Assignments and Teaching Assistants
+### Courses and Assignments
+We divided the courses to core courses and additional courses(like minors) .Core courses are accessible to all the students and teachers whereas minor courses i.e additional courses can be created by teachers specifying codes to register for the course while creating .Students can use theese code (which should be communicated using other forms) to enroll the course 
+Teachers can upload assignments  in the all the core courses and additional courses created by them and can specify the submission file type for students
+Students can dowload the 
 The teacher can create courses, assignments within courses and assign teaching assistants with editable privileges. Deadlines and weightage can be set for assignments. The teacher can see which assignments are left for grading. Students can submit files into the assignment as long as deadline is pending, and download their submitted file any time.
 
 Announcements, Emails and Messaging

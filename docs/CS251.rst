@@ -1,0 +1,45 @@
+CS251 package
+=============
+
+Submodules
+----------
+
+CS251.asgi module
+-----------------
+
+.. automodule:: CS251.asgi
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+CS251.settings module
+---------------------
+
+.. automodule:: CS251.settings
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+CS251.urls module
+-----------------
+
+.. automodule:: CS251.urls
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+CS251.wsgi module
+-----------------
+
+.. automodule:: CS251.wsgi
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: CS251
+   :members:
+   :undoc-members:
+   :show-inheritance:

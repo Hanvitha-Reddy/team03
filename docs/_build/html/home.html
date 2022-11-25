@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>home package &#8212; CS251 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="manage module" href="manage.html" />
+    <link rel="prev" title="accounts package" href="accounts.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="manage.html" title="manage module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="accounts.html" title="accounts package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CS251 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">CS251</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">home package</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="home-package">
+<h1>home package<a class="headerlink" href="#home-package" title="Permalink to this headline">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-home.admin">
+<span id="home-admin-module"></span><h2>home.admin module<a class="headerlink" href="#module-home.admin" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-home.apps">
+<span id="home-apps-module"></span><h2>home.apps module<a class="headerlink" href="#module-home.apps" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="home.apps.HomeConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">home.apps.</span></span><span class="sig-name descname"><span class="pre">HomeConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_module</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/home/apps.html#HomeConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#home.apps.HomeConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">django.apps.config.AppConfig</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="home.apps.HomeConfig.default_auto_field">
+<span class="sig-name descname"><span class="pre">default_auto_field</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'django.db.models.BigAutoField'</span></em><a class="headerlink" href="#home.apps.HomeConfig.default_auto_field" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="home.apps.HomeConfig.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'home'</span></em><a class="headerlink" href="#home.apps.HomeConfig.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-home.models">
+<span id="home-models-module"></span><h2>home.models module<a class="headerlink" href="#module-home.models" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-home.tests">
+<span id="home-tests-module"></span><h2>home.tests module<a class="headerlink" href="#module-home.tests" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-home.urls">
+<span id="home-urls-module"></span><h2>home.urls module<a class="headerlink" href="#module-home.urls" title="Permalink to this headline">¶</a></h2>
+<p>CS251 URL Configuration</p>
+<dl class="simple">
+<dt>The <cite>urlpatterns</cite> list routes URLs to views. For more information please see:</dt><dd><p><a class="reference external" href="https://docs.djangoproject.com/en/4.1/topics/http/urls/">https://docs.djangoproject.com/en/4.1/topics/http/urls/</a></p>
+</dd>
+</dl>
+<p>Examples:
+Function views</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Add an import:  from my_app import views</p></li>
+<li><p>Add a URL to urlpatterns:  path(‘’, views.home, name=’home’)</p></li>
+</ol>
+</div></blockquote>
+<dl class="simple">
+<dt>Class-based views</dt><dd><ol class="arabic simple">
+<li><p>Add an import:  from other_app.views import Home</p></li>
+<li><p>Add a URL to urlpatterns:  path(‘’, Home.as_view(), name=’home’)</p></li>
+</ol>
+</dd>
+<dt>Including another URLconf</dt><dd><ol class="arabic simple">
+<li><p>Import the include() function: from django.urls import include, path</p></li>
+<li><p>Add a URL to urlpatterns:  path(‘blog/’, include(‘blog.urls’))</p></li>
+</ol>
+</dd>
+</dl>
+</section>
+<section id="module-home.views">
+<span id="home-views-module"></span><h2>home.views module<a class="headerlink" href="#module-home.views" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="home.views.about">
+<span class="sig-prename descclassname"><span class="pre">home.views.</span></span><span class="sig-name descname"><span class="pre">about</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/home/views.html#about"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#home.views.about" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="home.views.contact">
+<span class="sig-prename descclassname"><span class="pre">home.views.</span></span><span class="sig-name descname"><span class="pre">contact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/home/views.html#contact"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#home.views.contact" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="home.views.index">
+<span class="sig-prename descclassname"><span class="pre">home.views.</span></span><span class="sig-name descname"><span class="pre">index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/home/views.html#index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#home.views.index" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="home.views.services">
+<span class="sig-prename descclassname"><span class="pre">home.views.</span></span><span class="sig-name descname"><span class="pre">services</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/home/views.html#services"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#home.views.services" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-home">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-home" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">home package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-home.admin">home.admin module</a></li>
+<li><a class="reference internal" href="#module-home.apps">home.apps module</a></li>
+<li><a class="reference internal" href="#module-home.models">home.models module</a></li>
+<li><a class="reference internal" href="#module-home.tests">home.tests module</a></li>
+<li><a class="reference internal" href="#module-home.urls">home.urls module</a></li>
+<li><a class="reference internal" href="#module-home.views">home.views module</a></li>
+<li><a class="reference internal" href="#module-home">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="accounts.html"
+                        title="previous chapter">accounts package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="manage.html"
+                        title="next chapter">manage module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/home.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="manage.html" title="manage module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="accounts.html" title="accounts package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CS251 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >CS251</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">home package</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, team03.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    </div>
+  </body>
+</html>

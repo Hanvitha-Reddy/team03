@@ -1,0 +1,545 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>accounts.views &#8212; CS251 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
+    
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">CS251 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">accounts.views</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for accounts.views</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span><span class="p">,</span> <span class="n">redirect</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.forms</span> <span class="kn">import</span> <span class="n">UserCreationForm</span>
+<span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse_lazy</span>
+<span class="kn">from</span> <span class="nn">django.views</span> <span class="kn">import</span> <span class="n">generic</span>
+<span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponseRedirect</span><span class="p">,</span> <span class="n">HttpResponse</span>
+<span class="kn">from</span> <span class="nn">.forms</span> <span class="kn">import</span> <span class="n">BookForm</span><span class="p">,</span> <span class="n">SubmissionForm</span><span class="p">,</span> <span class="n">UserForm</span><span class="p">,</span> <span class="n">UserProfileForm</span><span class="p">,</span> <span class="n">AddCourseForm</span><span class="p">,</span> <span class="n">CreateCourseForm</span>
+<span class="kn">from</span> <span class="nn">.forms</span> <span class="kn">import</span> <span class="n">SolutionForm</span><span class="p">,</span> <span class="n">AssignmentForm</span><span class="p">,</span> <span class="n">GradeForm</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Submit</span><span class="p">,</span> <span class="n">Book</span><span class="p">,</span> <span class="n">UserProfile</span><span class="p">,</span> <span class="n">AddCourse</span><span class="p">,</span> <span class="n">CreateCourse</span><span class="p">,</span> <span class="n">Assignment</span><span class="p">,</span> <span class="n">Solution</span><span class="p">,</span> <span class="n">Grade</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">authenticate</span><span class="p">,</span> <span class="n">login</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth</span> <span class="kn">import</span> <span class="n">logout</span>
+<span class="kn">import</span> <span class="nn">datetime</span><span class="o">,</span> <span class="nn">csv</span>
+<span class="kn">from</span> <span class="nn">django.core.exceptions</span> <span class="kn">import</span> <span class="n">ObjectDoesNotExist</span>
+
+
+<div class="viewcode-block" id="SignUpView"><a class="viewcode-back" href="../../accounts.html#accounts.views.SignUpView">[docs]</a><span class="k">class</span> <span class="nc">SignUpView</span><span class="p">(</span><span class="n">generic</span><span class="o">.</span><span class="n">CreateView</span><span class="p">):</span>
+    <span class="n">form_class</span> <span class="o">=</span> <span class="n">UserCreationForm</span>
+    <span class="n">success_url</span> <span class="o">=</span> <span class="n">reverse_lazy</span><span class="p">(</span><span class="s2">&quot;login&quot;</span><span class="p">)</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;accounts/signup.html&quot;</span></div>
+<span class="c1">#Create your views here.</span>
+
+<div class="viewcode-block" id="index"><a class="viewcode-back" href="../../accounts.html#accounts.views.index">[docs]</a><span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;if user is authenticated rediects to home page else to login page</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">:</span>
+		<span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;accounts:login&#39;</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">user_profile</span> <span class="o">=</span> <span class="n">UserProfile</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">identity</span> <span class="o">==</span> <span class="s1">&#39;teacher&#39;</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;accounts:home_t&#39;</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;accounts:home&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="assigns_251"><a class="viewcode-back" href="../../accounts.html#accounts.views.assigns_251">[docs]</a><span class="k">def</span> <span class="nf">assigns_251</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;redirects to assign.html if identity is teacher else requests logout</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">user_profile</span> <span class="o">=</span> <span class="n">UserProfile</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">identity</span> <span class="o">==</span> <span class="s1">&#39;teacher&#39;</span><span class="p">:</span>
+		<span class="n">Submissions</span> <span class="o">=</span> <span class="n">Submit</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">course</span> <span class="o">=</span> <span class="mi">251</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/assign.html&#39;</span><span class="p">,{</span>
+            <span class="s1">&#39;Submissions&#39;</span><span class="p">:</span> <span class="n">Submissions</span>
+        <span class="p">})</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="s1">&#39;/accounts/&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="assigns_215"><a class="viewcode-back" href="../../accounts.html#accounts.views.assigns_215">[docs]</a><span class="k">def</span> <span class="nf">assigns_215</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;redirects to assign.html if identity is teacher else requests logout</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">user_profile</span> <span class="o">=</span> <span class="n">UserProfile</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">identity</span> <span class="o">==</span> <span class="s1">&#39;teacher&#39;</span><span class="p">:</span>
+		<span class="n">Submissions</span> <span class="o">=</span> <span class="n">Submit</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">course</span> <span class="o">=</span> <span class="mi">215</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/assign.html&#39;</span><span class="p">,{</span>
+            <span class="s1">&#39;Submissions&#39;</span><span class="p">:</span> <span class="n">Submissions</span>
+        <span class="p">})</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="s1">&#39;/accounts/&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="assigns_293"><a class="viewcode-back" href="../../accounts.html#accounts.views.assigns_293">[docs]</a><span class="k">def</span> <span class="nf">assigns_293</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;redirects to assign.html if identity is teacher else requests logout</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">user_profile</span> <span class="o">=</span> <span class="n">UserProfile</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">identity</span> <span class="o">==</span> <span class="s1">&#39;teacher&#39;</span><span class="p">:</span>
+		<span class="n">Submissions</span> <span class="o">=</span> <span class="n">Submit</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">course</span> <span class="o">=</span> <span class="mi">293</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/assign.html&#39;</span><span class="p">,{</span>
+            <span class="s1">&#39;Submissions&#39;</span><span class="p">:</span> <span class="n">Submissions</span>
+        <span class="p">})</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="s1">&#39;/accounts/&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="upload_book"><a class="viewcode-back" href="../../accounts.html#accounts.views.upload_book">[docs]</a><span class="k">def</span> <span class="nf">upload_book</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;if submission form  is valid submits assignment and redirects to home page else requests logout</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">user_profile</span> <span class="o">=</span> <span class="n">UserProfile</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span> <span class="ow">and</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">identity</span> <span class="o">==</span> <span class="s1">&#39;student&#39;</span><span class="p">:</span>
+		<span class="n">form</span> <span class="o">=</span> <span class="n">SubmissionForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">:</span>
+			<span class="n">question</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">num</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;num&#39;</span><span class="p">],</span> <span class="n">course</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;course&#39;</span><span class="p">])</span>
+			<span class="nb">list</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">question</span><span class="o">.</span><span class="n">extensions</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+			<span class="n">f</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">[</span><span class="s1">&#39;Submission&#39;</span><span class="p">]</span>
+			<span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">:</span>
+				<span class="n">form</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span>
+				<span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+				<span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;/accounts/home/&#39;</span><span class="p">)</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">form</span> <span class="o">=</span> <span class="n">SubmissionForm</span><span class="p">()</span>
+				<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/upload_book.html&#39;</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="s1">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
+					<span class="s1">&#39;error_message&#39;</span><span class="p">:</span> <span class="s1">&#39;Invalid file format&#39;</span>
+                <span class="p">})</span>
+	<span class="k">if</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">identity</span> <span class="o">!=</span> <span class="s1">&#39;student&#39;</span><span class="p">:</span>
+		<span class="n">logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="s1">&#39;/accounts/&#39;</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">form</span> <span class="o">=</span> <span class="n">SubmissionForm</span><span class="p">()</span>
+	<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/upload_book.html&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="s1">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span>
+    <span class="p">})</span></div>
+
+<div class="viewcode-block" id="new_upload"><a class="viewcode-back" href="../../accounts.html#accounts.views.new_upload">[docs]</a><span class="k">def</span> <span class="nf">new_upload</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;if form is valid submits assignment for newly created courses and redirects to home page else requests logout</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">user_profile</span> <span class="o">=</span> <span class="n">UserProfile</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span> <span class="ow">and</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">identity</span> <span class="o">==</span> <span class="s1">&#39;student&#39;</span><span class="p">:</span>
+		<span class="n">form</span> <span class="o">=</span> <span class="n">SolutionForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">:</span>
+			<span class="n">form</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span>
+			<span class="n">courses</span> <span class="o">=</span> <span class="n">AddCourse</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">username</span> <span class="o">=</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
+			<span class="k">for</span> <span class="n">course</span> <span class="ow">in</span> <span class="n">courses</span><span class="p">:</span>
+				<span class="n">total</span> <span class="o">=</span> <span class="n">CreateCourse</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">code</span> <span class="o">=</span> <span class="n">course</span><span class="o">.</span><span class="n">code</span><span class="p">)</span>
+				<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">total</span><span class="p">:</span>
+					<span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">course</span> <span class="o">==</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;course&#39;</span><span class="p">]:</span>
+						<span class="n">question</span> <span class="o">=</span> <span class="n">Assignment</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">num</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;num&#39;</span><span class="p">],</span><span class="n">course</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;course&#39;</span><span class="p">])</span>
+						<span class="nb">list</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">question</span><span class="o">.</span><span class="n">extensions</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+						<span class="n">f</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">[</span><span class="s1">&#39;Submission&#39;</span><span class="p">]</span>
+						<span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">:</span>
+							<span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+							<span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;/accounts/home/&#39;</span><span class="p">)</span>
+						<span class="k">else</span><span class="p">:</span>
+							<span class="n">form</span> <span class="o">=</span> <span class="n">SolutionForm</span>
+							<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/Submit.html&#39;</span><span class="p">,</span> <span class="p">{</span>
+								<span class="s1">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
+								<span class="s1">&#39;error_message&#39;</span><span class="p">:</span> <span class="s1">&#39;Invalid file format&#39;</span>
+							<span class="p">})</span>
+	<span class="k">if</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">identity</span> <span class="o">!=</span> <span class="s1">&#39;student&#39;</span><span class="p">:</span>
+		<span class="n">logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="s1">&#39;/accounts/&#39;</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">form</span> <span class="o">=</span> <span class="n">SolutionForm</span><span class="p">()</span>
+	<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/Submit.html&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="s1">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span>
+    <span class="p">})</span></div>
+
+<div class="viewcode-block" id="new_upload_t"><a class="viewcode-back" href="../../accounts.html#accounts.views.new_upload_t">[docs]</a><span class="k">def</span> <span class="nf">new_upload_t</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;if identity is teacher and form is valid creates a new assignment for newly created courses ,and redirects to home else requests logout</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">user_profile</span> <span class="o">=</span> <span class="n">UserProfile</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span> <span class="ow">and</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">identity</span> <span class="o">==</span> <span class="s1">&#39;teacher&#39;</span><span class="p">:</span>
+		<span class="n">form</span> <span class="o">=</span> <span class="n">AssignmentForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">:</span>
+			<span class="n">form</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span>
+			<span class="n">courses</span> <span class="o">=</span> <span class="n">CreateCourse</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">username</span> <span class="o">=</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
+			<span class="k">for</span> <span class="n">course</span> <span class="ow">in</span> <span class="n">courses</span><span class="p">:</span>
+				<span class="k">if</span> <span class="n">course</span><span class="o">.</span><span class="n">course</span> <span class="o">==</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;course&#39;</span><span class="p">]:</span>
+					<span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+					<span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;/accounts/home_t/&#39;</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">identity</span> <span class="o">!=</span> <span class="s1">&#39;teacher&#39;</span><span class="p">:</span>
+		<span class="n">logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="s1">&#39;/accounts/&#39;</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">form</span> <span class="o">=</span> <span class="n">AssignmentForm</span><span class="p">()</span>
+	<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/Assignment.html&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="s1">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span>
+    <span class="p">})</span></div>
+
+<div class="viewcode-block" id="upload_book_t"><a class="viewcode-back" href="../../accounts.html#accounts.views.upload_book_t">[docs]</a><span class="k">def</span> <span class="nf">upload_book_t</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;if identity is teacher and form is valid creates a new assignment for default courses,and redirects to home else requests logout</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">user_profile</span> <span class="o">=</span> <span class="n">UserProfile</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span> <span class="ow">and</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">identity</span> <span class="o">==</span> <span class="s1">&#39;teacher&#39;</span><span class="p">:</span>
+		<span class="n">form</span> <span class="o">=</span> <span class="n">BookForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">:</span>
+			<span class="n">form</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span>
+			<span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+			<span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;/accounts/home_t/&#39;</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">identity</span> <span class="o">!=</span> <span class="s1">&#39;teacher&#39;</span><span class="p">:</span>
+		<span class="n">logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="s1">&#39;/accounts/&#39;</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">form</span> <span class="o">=</span> <span class="n">BookForm</span><span class="p">()</span>
+	<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/upload_book_t.html&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="s1">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span>
+    <span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="register"><a class="viewcode-back" href="../../accounts.html#accounts.views.register">[docs]</a><span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;if user in not authenticated registers the user details and next redirects login page </span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">:</span>
+		<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/home.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;error_message&#39;</span><span class="p">:</span> <span class="s2">&quot;You are already registered!!&quot;</span><span class="p">})</span>
+	<span class="k">else</span><span class="p">:</span>	
+		<span class="n">user_form</span> <span class="o">=</span> <span class="n">UserForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">)</span>
+		<span class="n">profile_form</span> <span class="o">=</span> <span class="n">UserProfileForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">user_form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">()</span> <span class="ow">and</span> <span class="n">profile_form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+				<span class="n">user</span> <span class="o">=</span> <span class="n">user_form</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">commit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+				<span class="n">username</span> <span class="o">=</span> <span class="n">user_form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">]</span>
+				<span class="n">password</span> <span class="o">=</span> <span class="n">user_form</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">]</span>
+				<span class="n">user</span><span class="o">.</span><span class="n">set_password</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">password</span><span class="p">)</span>
+				<span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+				<span class="n">profile</span> <span class="o">=</span> <span class="n">profile_form</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">commit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+				<span class="n">profile</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span>
+				<span class="n">profile</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+				<span class="n">user</span> <span class="o">=</span> <span class="n">authenticate</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span>
+				<span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+					<span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_active</span><span class="p">:</span>
+						<span class="n">login</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+						<span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;accounts:login&#39;</span><span class="p">)</span>
+		<span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+			<span class="s2">&quot;pform&quot;</span><span class="p">:</span> <span class="n">profile_form</span><span class="p">,</span>
+			<span class="s2">&quot;uform&quot;</span><span class="p">:</span> <span class="n">user_form</span><span class="p">,</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/register.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="home"><a class="viewcode-back" href="../../accounts.html#accounts.views.home">[docs]</a><span class="k">def</span> <span class="nf">home</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;if user is authenticated redirects to home page from login page else stays in login page</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">:</span>
+		<span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;accounts:login&#39;</span><span class="p">)</span>
+	<span class="n">user_profile</span> <span class="o">=</span> <span class="n">UserProfile</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">identity</span> <span class="o">!=</span> <span class="s1">&#39;student&#39;</span><span class="p">:</span>
+		<span class="n">logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/login.html&#39;</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">course_form</span> <span class="o">=</span> <span class="n">AddCourseForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">)</span>
+		<span class="n">create_courses</span> <span class="o">=</span> <span class="n">CreateCourse</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+		<span class="n">add_courses</span> <span class="o">=</span> <span class="n">AddCourse</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+		<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">course_form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+				<span class="n">course_form</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span>
+				<span class="n">course_form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+				<span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;accounts:home&#39;</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/home.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;error_message&#39;</span><span class="p">:</span> <span class="s1">&#39;Unmatched Content&#39;</span><span class="p">})</span>
+		<span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+			<span class="s2">&quot;form&quot;</span><span class="p">:</span> <span class="n">course_form</span><span class="p">,</span>
+			<span class="s2">&quot;create_courses&quot;</span><span class="p">:</span> <span class="n">create_courses</span><span class="p">,</span>
+			<span class="s2">&quot;add_courses&quot;</span><span class="p">:</span> <span class="n">add_courses</span><span class="p">,</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/home.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>	</div>
+
+<div class="viewcode-block" id="login_user"><a class="viewcode-back" href="../../accounts.html#accounts.views.login_user">[docs]</a><span class="k">def</span> <span class="nf">login_user</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;checks the details in login page and redirects to its desired home page</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+		<span class="n">username</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">]</span>
+		<span class="n">password</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">]</span>
+		<span class="n">identity</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">[</span><span class="s1">&#39;identity&#39;</span><span class="p">]</span>
+		<span class="n">user</span> <span class="o">=</span> <span class="n">authenticate</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">is_active</span><span class="p">:</span>
+				<span class="n">login</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+				<span class="k">try</span><span class="p">:</span>
+					<span class="n">user_profile</span> <span class="o">=</span> <span class="n">UserProfile</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span><span class="n">identity</span><span class="o">=</span><span class="n">identity</span><span class="p">)</span>
+				<span class="k">except</span> <span class="n">ObjectDoesNotExist</span><span class="p">:</span>
+					<span class="n">logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+					<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/login.html&#39;</span><span class="p">)</span>
+				<span class="k">if</span> <span class="n">user_profile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+					<span class="k">if</span> <span class="n">identity</span><span class="o">==</span><span class="s1">&#39;student&#39;</span><span class="p">:</span>
+						<span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;accounts:home&#39;</span><span class="p">)</span>
+					<span class="k">else</span><span class="p">:</span>
+						<span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;accounts:home_t&#39;</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/login.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;error_message&#39;</span><span class="p">:</span> <span class="s1">&#39;Invalid login&#39;</span><span class="p">})</span>
+	<span class="n">logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/login.html&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="logout_user"><a class="viewcode-back" href="../../accounts.html#accounts.views.logout_user">[docs]</a><span class="k">def</span> <span class="nf">logout_user</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;requests to logout</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="s1">&#39;/accounts/&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="home_t"><a class="viewcode-back" href="../../accounts.html#accounts.views.home_t">[docs]</a><span class="k">def</span> <span class="nf">home_t</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;if user is authenticated and teacher redirects to home page of teacher</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">:</span>
+		<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/login.html&#39;</span><span class="p">)</span>
+	<span class="n">user_profile</span> <span class="o">=</span> <span class="n">UserProfile</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">identity</span> <span class="o">!=</span> <span class="s1">&#39;teacher&#39;</span><span class="p">:</span>
+		<span class="n">logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/login.html&#39;</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">courses</span> <span class="o">=</span> <span class="n">CreateCourse</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">username</span> <span class="o">=</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/home_t.html&#39;</span><span class="p">,</span> <span class="p">{</span>
+			<span class="s1">&#39;courses&#39;</span><span class="p">:</span> <span class="n">courses</span>
+		<span class="p">})</span></div>
+
+<div class="viewcode-block" id="course_251"><a class="viewcode-back" href="../../accounts.html#accounts.views.course_251">[docs]</a><span class="k">def</span> <span class="nf">course_251</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;if user is teacher requests logouts else redirects to courtse.html</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">user_profile</span> <span class="o">=</span> <span class="n">UserProfile</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">identity</span> <span class="o">==</span> <span class="s1">&#39;teacher&#39;</span><span class="p">:</span>
+		<span class="n">logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/login.html&#39;</span><span class="p">)</span>
+	<span class="n">Assignments</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">course</span> <span class="o">=</span> <span class="s1">&#39;CS251&#39;</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/course.html&#39;</span><span class="p">,{</span>
+            <span class="s1">&#39;Assignments&#39;</span><span class="p">:</span> <span class="n">Assignments</span>
+    <span class="p">})</span></div>
+
+<div class="viewcode-block" id="course_293"><a class="viewcode-back" href="../../accounts.html#accounts.views.course_293">[docs]</a><span class="k">def</span> <span class="nf">course_293</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;if user is teacher requests logouts else redirects to courtse.html</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">user_profile</span> <span class="o">=</span> <span class="n">UserProfile</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">identity</span> <span class="o">==</span> <span class="s1">&#39;teacher&#39;</span><span class="p">:</span>
+		<span class="n">logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/login.html&#39;</span><span class="p">)</span>
+	<span class="n">Assignments</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">course</span> <span class="o">=</span> <span class="s1">&#39;CS293&#39;</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/course.html&#39;</span><span class="p">,{</span>
+            <span class="s1">&#39;Assignments&#39;</span><span class="p">:</span> <span class="n">Assignments</span>
+    <span class="p">})</span></div>
+
+<div class="viewcode-block" id="course_215"><a class="viewcode-back" href="../../accounts.html#accounts.views.course_215">[docs]</a><span class="k">def</span> <span class="nf">course_215</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;if user is teacher requests logouts else redirects to courtse.html</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">user_profile</span> <span class="o">=</span> <span class="n">UserProfile</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">identity</span> <span class="o">==</span> <span class="s1">&#39;teacher&#39;</span><span class="p">:</span>
+		<span class="n">logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/login.html&#39;</span><span class="p">)</span>
+	<span class="n">Assignments</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">course</span> <span class="o">=</span> <span class="s1">&#39;CS215&#39;</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/course.html&#39;</span><span class="p">,{</span>
+            <span class="s1">&#39;Assignments&#39;</span><span class="p">:</span> <span class="n">Assignments</span>
+    <span class="p">})</span></div>
+
+<div class="viewcode-block" id="profile"><a class="viewcode-back" href="../../accounts.html#accounts.views.profile">[docs]</a><span class="k">def</span> <span class="nf">profile</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;if user is authenticated redirects to profile page</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_authenticated</span><span class="p">:</span>
+		<span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;accounts:login&#39;</span><span class="p">)</span>
+	<span class="n">user_profile</span> <span class="o">=</span> <span class="n">UserProfile</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/profile.html&#39;</span><span class="p">,</span> <span class="p">{</span>
+		    <span class="s1">&#39;profile&#39;</span><span class="p">:</span><span class="n">user_profile</span><span class="p">})</span></div>
+
+<div class="viewcode-block" id="course"><a class="viewcode-back" href="../../accounts.html#accounts.views.course">[docs]</a><span class="k">def</span> <span class="nf">course</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;if user is teacher and form is valid ,creates course and redirects to home page of user </span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">user_profile</span> <span class="o">=</span> <span class="n">UserProfile</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span> <span class="ow">and</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">identity</span> <span class="o">==</span> <span class="s1">&#39;teacher&#39;</span><span class="p">:</span>
+		<span class="n">form</span> <span class="o">=</span> <span class="n">CreateCourseForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">FILES</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">:</span>
+			<span class="n">form</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span>
+			<span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+			<span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;/accounts/home_t/&#39;</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;accounts:course&#39;</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="k">if</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">identity</span> <span class="o">!=</span> <span class="s1">&#39;teacher&#39;</span><span class="p">:</span>
+			<span class="n">logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="s1">&#39;/accounts/&#39;</span><span class="p">)</span>
+		<span class="n">form</span> <span class="o">=</span> <span class="n">CreateCourseForm</span><span class="p">()</span>
+		<span class="n">courses</span> <span class="o">=</span> <span class="n">CreateCourse</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">username</span> <span class="o">=</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/create_course.html&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="s1">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
+		<span class="s1">&#39;courses&#39;</span><span class="p">:</span> <span class="n">courses</span><span class="p">,</span>
+    <span class="p">})</span></div>
+
+<div class="viewcode-block" id="assignments"><a class="viewcode-back" href="../../accounts.html#accounts.views.assignments">[docs]</a><span class="k">def</span> <span class="nf">assignments</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;if user is student,shows all assignments and submissions of the user else requests logout</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">user_profile</span> <span class="o">=</span> <span class="n">UserProfile</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+	<span class="n">Assignments</span> <span class="o">=</span> <span class="n">Book</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+	<span class="n">Submissions</span> <span class="o">=</span> <span class="n">Submit</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+	<span class="n">NewAssignments</span> <span class="o">=</span> <span class="n">Assignment</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+	<span class="n">NewSubmissions</span> <span class="o">=</span> <span class="n">Solution</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+	<span class="k">if</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">identity</span> <span class="o">==</span> <span class="s1">&#39;student&#39;</span><span class="p">:</span>
+		<span class="n">Grades</span> <span class="o">=</span> <span class="n">Grade</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Student</span> <span class="o">=</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
+		<span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+			<span class="s2">&quot;Assignments&quot;</span><span class="p">:</span> <span class="n">Assignments</span><span class="p">,</span>
+			<span class="s2">&quot;Submissions&quot;</span><span class="p">:</span> <span class="n">Submissions</span><span class="p">,</span>
+			<span class="s2">&quot;NewAssignments&quot;</span><span class="p">:</span> <span class="n">NewAssignments</span><span class="p">,</span>
+			<span class="s2">&quot;NewSubmissions&quot;</span><span class="p">:</span> <span class="n">NewSubmissions</span><span class="p">,</span>
+			<span class="s2">&quot;Grades&quot;</span><span class="p">:</span> <span class="n">Grades</span><span class="p">,</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/assignments_s.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+	<span class="k">elif</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">identity</span> <span class="o">==</span> <span class="s1">&#39;teacher&#39;</span><span class="p">:</span>
+		<span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+			<span class="s2">&quot;Assignments&quot;</span><span class="p">:</span> <span class="n">Assignments</span><span class="p">,</span>
+			<span class="s2">&quot;Submissions&quot;</span><span class="p">:</span> <span class="n">Submissions</span><span class="p">,</span>
+			<span class="s2">&quot;NewAssignments&quot;</span><span class="p">:</span> <span class="n">NewAssignments</span><span class="p">,</span>
+			<span class="s2">&quot;NewSubmissions&quot;</span><span class="p">:</span> <span class="n">NewSubmissions</span><span class="p">,</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/assignments.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="s1">&#39;/accounts/&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="submissions"><a class="viewcode-back" href="../../accounts.html#accounts.views.submissions">[docs]</a><span class="k">def</span> <span class="nf">submissions</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;if user is teacher,redirects to the submissions page of students</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">user_profile</span> <span class="o">=</span> <span class="n">UserProfile</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">identity</span> <span class="o">!=</span> <span class="s1">&#39;teacher&#39;</span><span class="p">:</span>
+		<span class="n">logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="s1">&#39;/accounts&#39;</span><span class="p">)</span>
+	<span class="n">Assignments</span> <span class="o">=</span> <span class="n">Assignment</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">username</span> <span class="o">=</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
+	<span class="n">Solutions</span> <span class="o">=</span> <span class="n">Solution</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+	<span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+		<span class="s1">&#39;Assignments&#39;</span><span class="p">:</span> <span class="n">Assignments</span><span class="p">,</span>
+		<span class="s1">&#39;Solutions&#39;</span><span class="p">:</span> <span class="n">Solutions</span><span class="p">,</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/submissions.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="courseview"><a class="viewcode-back" href="../../accounts.html#accounts.views.courseview">[docs]</a><span class="k">def</span> <span class="nf">courseview</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;if user is student,shows his course stats else requests logout</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">user_profile</span> <span class="o">=</span> <span class="n">UserProfile</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+	<span class="n">Assignments</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="n">Submissions</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="n">NewAssignments</span> <span class="o">=</span> <span class="n">Assignment</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+	<span class="n">NewSubmissions</span> <span class="o">=</span> <span class="n">Solution</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+	<span class="k">if</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">identity</span> <span class="o">==</span> <span class="s1">&#39;student&#39;</span><span class="p">:</span>
+		<span class="n">Grades</span> <span class="o">=</span> <span class="n">Grade</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Student</span> <span class="o">=</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
+		<span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+			<span class="s2">&quot;Assignments&quot;</span><span class="p">:</span> <span class="n">Assignments</span><span class="p">,</span>
+			<span class="s2">&quot;Submissions&quot;</span><span class="p">:</span> <span class="n">Submissions</span><span class="p">,</span>
+			<span class="s2">&quot;NewAssignments&quot;</span><span class="p">:</span> <span class="n">NewAssignments</span><span class="p">,</span>
+			<span class="s2">&quot;NewSubmissions&quot;</span><span class="p">:</span> <span class="n">NewSubmissions</span><span class="p">,</span>
+			<span class="s2">&quot;Grades&quot;</span><span class="p">:</span> <span class="n">Grades</span><span class="p">,</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/assignments_s.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="s1">&#39;/accounts/&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="view"><a class="viewcode-back" href="../../accounts.html#accounts.views.view">[docs]</a><span class="k">def</span> <span class="nf">view</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;if user is authenticated and student ,shows his course stats else requests logout </span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">user_profile</span> <span class="o">=</span> <span class="n">UserProfile</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">identity</span> <span class="o">!=</span> <span class="s1">&#39;student&#39;</span><span class="p">:</span>
+		<span class="n">logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="s1">&#39;/accounts/&#39;</span><span class="p">)</span>
+	<span class="n">courses</span> <span class="o">=</span> <span class="n">AddCourse</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">username</span> <span class="o">=</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
+	<span class="n">Assignments</span> <span class="o">=</span> <span class="n">Assignment</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+	<span class="n">total</span> <span class="o">=</span> <span class="n">CreateCourse</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+	<span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+		<span class="s1">&#39;courses&#39;</span><span class="p">:</span> <span class="n">courses</span><span class="p">,</span>
+		<span class="s1">&#39;Assignments&#39;</span><span class="p">:</span> <span class="n">Assignments</span><span class="p">,</span>
+		<span class="s1">&#39;total&#39;</span><span class="p">:</span> <span class="n">total</span><span class="p">,</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/view.html&#39;</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span></div>
+<div class="viewcode-block" id="vsc"><a class="viewcode-back" href="../../accounts.html#accounts.views.vsc">[docs]</a><span class="k">def</span> <span class="nf">vsc</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;if user is not teacher requests logout else returns the response of the teacher</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">user_profile</span> <span class="o">=</span> <span class="n">UserProfile</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+	<span class="n">filename</span> <span class="o">=</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span> <span class="o">+</span> <span class="s1">&#39;.csv&#39;</span>
+	<span class="k">if</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">identity</span> <span class="o">==</span> <span class="s1">&#39;teacher&#39;</span><span class="p">:</span>
+		<span class="n">response</span> <span class="o">=</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+		<span class="n">response</span><span class="p">[</span><span class="s1">&#39;Content-Disposition&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;attachment; filename = </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+		<span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+		<span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="s1">&#39;Student&#39;</span><span class="p">,</span> <span class="s1">&#39;Qsn.NO&#39;</span><span class="p">,</span> <span class="s1">&#39;Course&#39;</span><span class="p">,</span> <span class="s1">&#39;Marks&#39;</span><span class="p">,</span> <span class="s1">&#39;FeedBack&#39;</span><span class="p">])</span>
+		<span class="k">if</span> <span class="n">Grade</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">username_t</span> <span class="o">=</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">)</span> <span class="o">!=</span> <span class="p">[]:</span>
+			<span class="n">grade</span> <span class="o">=</span> <span class="n">Grade</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">username_t</span> <span class="o">=</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
+			<span class="n">var1</span> <span class="o">=</span> <span class="kc">True</span>
+		<span class="k">if</span> <span class="n">var1</span><span class="p">:</span>
+			<span class="k">for</span> <span class="n">grades</span> <span class="ow">in</span> <span class="n">grade</span><span class="p">:</span>
+				<span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="n">grades</span><span class="o">.</span><span class="n">Student</span><span class="p">,</span> <span class="n">grades</span><span class="o">.</span><span class="n">num</span><span class="p">,</span> <span class="n">grades</span><span class="o">.</span><span class="n">course</span><span class="p">,</span> <span class="n">grades</span><span class="o">.</span><span class="n">marks</span><span class="p">,</span> <span class="n">grades</span><span class="o">.</span><span class="n">FeedBack</span><span class="p">])</span>
+		<span class="k">return</span> <span class="n">response</span></div>
+
+<div class="viewcode-block" id="grade"><a class="viewcode-back" href="../../accounts.html#accounts.views.grade">[docs]</a><span class="k">def</span> <span class="nf">grade</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">course</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;if user is not teacher requests logout else grade the assignments of students</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">user_profile</span> <span class="o">=</span> <span class="n">UserProfile</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">user</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">identity</span> <span class="o">!=</span> <span class="s1">&#39;teacher&#39;</span><span class="p">:</span>
+		<span class="n">logout</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">HttpResponseRedirect</span><span class="p">(</span><span class="s1">&#39;/accounts/&#39;</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+		<span class="n">grade_form</span> <span class="o">=</span> <span class="n">GradeForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">grade_form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+			<span class="n">grade_form</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">course</span> <span class="o">=</span> <span class="n">course</span>
+			<span class="n">grade_form</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">username_t</span> <span class="o">=</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">username</span>
+			<span class="n">grade_form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+			<span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="s1">&#39;accounts:home_t&#39;</span><span class="p">)</span>
+	<span class="n">form</span> <span class="o">=</span> <span class="n">GradeForm</span><span class="p">()</span>
+	<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;accounts/grade.html&#39;</span><span class="p">,{</span>
+			<span class="s1">&#39;form&#39;</span><span class="p">:</span> <span class="n">form</span>
+		<span class="p">})</span></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">CS251 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">accounts.views</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, team03.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>accounts.forms &#8212; CS251 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
+    
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">CS251 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">accounts.forms</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for accounts.forms</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">django.forms</span> <span class="kn">import</span> <span class="n">ModelForm</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Book</span><span class="p">,</span> <span class="n">UserProfile</span><span class="p">,</span> <span class="n">Submit</span><span class="p">,</span> <span class="n">AddCourse</span><span class="p">,</span> <span class="n">CreateCourse</span><span class="p">,</span> <span class="n">Assignment</span><span class="p">,</span> <span class="n">Solution</span><span class="p">,</span> <span class="n">Grade</span>
+<span class="kn">from</span> <span class="nn">django</span> <span class="kn">import</span> <span class="n">forms</span>
+<span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">User</span>
+
+<div class="viewcode-block" id="BookForm"><a class="viewcode-back" href="../../accounts.html#accounts.forms.BookForm">[docs]</a><span class="k">class</span> <span class="nc">BookForm</span><span class="p">(</span><span class="n">ModelForm</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;This is a class representation of form for assignment creation</span>
+
+<span class="sd">   </span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="BookForm.Meta"><a class="viewcode-back" href="../../accounts.html#accounts.forms.BookForm.Meta">[docs]</a>	<span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+		<span class="n">model</span> <span class="o">=</span> <span class="n">Book</span>
+		<span class="n">help_texts</span> <span class="o">=</span> <span class="p">{</span>
+			<span class="s1">&#39;extensions&#39;</span><span class="p">:</span> <span class="s1">&#39;Enter comma separated extensions. Example: pdf, docx, txt&#39;</span><span class="p">,</span>
+		<span class="p">}</span>
+		<span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;num&#39;</span><span class="p">,</span> <span class="s1">&#39;course&#39;</span><span class="p">,</span> <span class="s1">&#39;Assignment&#39;</span><span class="p">,</span> <span class="s1">&#39;extensions&#39;</span><span class="p">]</span></div></div>
+
+<div class="viewcode-block" id="SubmissionForm"><a class="viewcode-back" href="../../accounts.html#accounts.forms.SubmissionForm">[docs]</a><span class="k">class</span> <span class="nc">SubmissionForm</span><span class="p">(</span><span class="n">ModelForm</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;This is a class representation of form for assignment submission</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="SubmissionForm.Meta"><a class="viewcode-back" href="../../accounts.html#accounts.forms.SubmissionForm.Meta">[docs]</a>	<span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+		<span class="n">model</span> <span class="o">=</span> <span class="n">Submit</span>
+		<span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;num&#39;</span><span class="p">,</span> <span class="s1">&#39;course&#39;</span><span class="p">,</span> <span class="s1">&#39;Submission&#39;</span><span class="p">]</span></div></div>
+
+<div class="viewcode-block" id="AssignmentForm"><a class="viewcode-back" href="../../accounts.html#accounts.forms.AssignmentForm">[docs]</a><span class="k">class</span> <span class="nc">AssignmentForm</span><span class="p">(</span><span class="n">ModelForm</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;This is a class representation of form for assignment creation</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="AssignmentForm.Meta"><a class="viewcode-back" href="../../accounts.html#accounts.forms.AssignmentForm.Meta">[docs]</a>	<span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+		<span class="n">model</span> <span class="o">=</span> <span class="n">Assignment</span>
+		<span class="n">help_texts</span> <span class="o">=</span> <span class="p">{</span>
+			<span class="s1">&#39;extensions&#39;</span><span class="p">:</span> <span class="s1">&#39;Enter comma separated extensions. Example: pdf, docx, txt&#39;</span><span class="p">,</span>
+		<span class="p">}</span>
+		<span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;num&#39;</span><span class="p">,</span> <span class="s1">&#39;course&#39;</span><span class="p">,</span> <span class="s1">&#39;Assignment&#39;</span><span class="p">,</span> <span class="s1">&#39;extensions&#39;</span><span class="p">]</span></div></div>
+
+<div class="viewcode-block" id="SolutionForm"><a class="viewcode-back" href="../../accounts.html#accounts.forms.SolutionForm">[docs]</a><span class="k">class</span> <span class="nc">SolutionForm</span><span class="p">(</span><span class="n">ModelForm</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;This is a class representation of form for solution submission</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="SolutionForm.Meta"><a class="viewcode-back" href="../../accounts.html#accounts.forms.SolutionForm.Meta">[docs]</a>	<span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+		<span class="n">model</span> <span class="o">=</span> <span class="n">Solution</span>
+		<span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;num&#39;</span><span class="p">,</span> <span class="s1">&#39;course&#39;</span><span class="p">,</span> <span class="s1">&#39;Submission&#39;</span><span class="p">]</span></div></div>
+
+<div class="viewcode-block" id="GradeForm"><a class="viewcode-back" href="../../accounts.html#accounts.forms.GradeForm">[docs]</a><span class="k">class</span> <span class="nc">GradeForm</span><span class="p">(</span><span class="n">ModelForm</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;This is a class representation of form for grading</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="GradeForm.Meta"><a class="viewcode-back" href="../../accounts.html#accounts.forms.GradeForm.Meta">[docs]</a>	<span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+		<span class="n">model</span> <span class="o">=</span> <span class="n">Grade</span>
+		<span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Student&#39;</span><span class="p">,</span> <span class="s1">&#39;num&#39;</span><span class="p">,</span> <span class="s1">&#39;marks&#39;</span><span class="p">,</span> <span class="s1">&#39;FeedBack&#39;</span><span class="p">]</span></div></div>
+
+<div class="viewcode-block" id="AddCourseForm"><a class="viewcode-back" href="../../accounts.html#accounts.forms.AddCourseForm">[docs]</a><span class="k">class</span> <span class="nc">AddCourseForm</span><span class="p">(</span><span class="n">ModelForm</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;This is a class representation of form for creating course</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="AddCourseForm.Meta"><a class="viewcode-back" href="../../accounts.html#accounts.forms.AddCourseForm.Meta">[docs]</a>	<span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+		<span class="n">model</span> <span class="o">=</span> <span class="n">AddCourse</span>
+		<span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]</span></div></div>
+
+<div class="viewcode-block" id="CreateCourseForm"><a class="viewcode-back" href="../../accounts.html#accounts.forms.CreateCourseForm">[docs]</a><span class="k">class</span> <span class="nc">CreateCourseForm</span><span class="p">(</span><span class="n">ModelForm</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;This is a class representation of form for adding course</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="CreateCourseForm.Meta"><a class="viewcode-back" href="../../accounts.html#accounts.forms.CreateCourseForm.Meta">[docs]</a>	<span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+		<span class="n">model</span> <span class="o">=</span> <span class="n">CreateCourse</span>
+		<span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;course&#39;</span><span class="p">,</span> <span class="s1">&#39;code&#39;</span><span class="p">]</span></div></div>
+
+<div class="viewcode-block" id="UserForm"><a class="viewcode-back" href="../../accounts.html#accounts.forms.UserForm">[docs]</a><span class="k">class</span> <span class="nc">UserForm</span><span class="p">(</span><span class="n">ModelForm</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;This is a class representation of form with user inputs</span>
+
+<span class="sd">	#. clean()</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">password</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">widget</span><span class="o">=</span><span class="n">forms</span><span class="o">.</span><span class="n">PasswordInput</span><span class="p">)</span>
+	<span class="n">confirm_password</span> <span class="o">=</span> <span class="n">forms</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">widget</span><span class="o">=</span><span class="n">forms</span><span class="o">.</span><span class="n">PasswordInput</span><span class="p">())</span>
+
+<div class="viewcode-block" id="UserForm.Meta"><a class="viewcode-back" href="../../accounts.html#accounts.forms.UserForm.Meta">[docs]</a>	<span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+		<span class="n">model</span> <span class="o">=</span> <span class="n">User</span>
+		<span class="n">help_texts</span> <span class="o">=</span> <span class="p">{</span>
+			<span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="s1">&#39;Enter your College Roll No.&#39;</span><span class="p">,</span>
+		<span class="p">}</span>
+		<span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">,</span> <span class="s1">&#39;email&#39;</span><span class="p">,</span> <span class="s1">&#39;password&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="UserForm.clean"><a class="viewcode-back" href="../../accounts.html#accounts.forms.UserForm.clean">[docs]</a>	<span class="k">def</span> <span class="nf">clean</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;used to confirm password</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">cleaned_data</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">UserForm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">clean</span><span class="p">()</span>
+		<span class="n">password</span> <span class="o">=</span> <span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;password&quot;</span><span class="p">)</span>
+		<span class="n">confirm_password</span> <span class="o">=</span> <span class="n">cleaned_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;confirm_password&quot;</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="n">password</span> <span class="o">!=</span> <span class="n">confirm_password</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="n">forms</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">(</span><span class="s2">&quot;password does not match&quot;</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="UserProfileForm"><a class="viewcode-back" href="../../accounts.html#accounts.forms.UserProfileForm">[docs]</a><span class="k">class</span> <span class="nc">UserProfileForm</span><span class="p">(</span><span class="n">ModelForm</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;This is a class representation of form with additional information of user</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="UserProfileForm.Meta"><a class="viewcode-back" href="../../accounts.html#accounts.forms.UserProfileForm.Meta">[docs]</a>	<span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+		<span class="n">model</span> <span class="o">=</span> <span class="n">UserProfile</span>
+		<span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;full_name&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="s1">&#39;identity&#39;</span><span class="p">]</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">CS251 1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">accounts.forms</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, team03.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.2.
+    </div>
+  </body>
+</html>

@@ -3,10 +3,10 @@ Repository for the course project done as part of CS-251 (Software Systems Lab) 
 A Course Management System similar to Moodle created by Subhash,Praneeth,Hanvitha .We used Django Framework for the backend and HTML,Bootstrap library for the frontend.
 
 ## Basic Commands
-Open directory CS251 and then run commands
-python3 manage.py makemigrations
-python3 manage.py migrate
-python3 manage.py runserver
+Open directory CS251 and then run commands <br>
+python3 manage.py makemigrations <br>
+python3 manage.py migrate <br>
+python3 manage.py runserver <br>
 
 ## To view documentation:
 Cs251/docs/build/html/index.html

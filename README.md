@@ -2,19 +2,24 @@
 Repository for the course project done as part of CS-251 (Software Systems Lab) course at IIT Bombay in Autumn 2022.
 A Course Management System similar to Moodle created by Subhash,Praneeth,Hanvitha .We used Django Framework for the backend and HTML library for the frontend.
 
-##Key Features:
+## Key Features:
 
 ### Authentication
-We have used django-rest-auth for authentication and tokenization of users. To use the Course management page first of all each user should register their account with name, username, year of study, email id and identity whether he/she is a teacher or a student and then login with username,password and correct identity whether teacher or student(this is done to avoid confusion when a teaching assistant (teacher) who can also be a student for other courses) which then takes to the respective home pages 
+We have used django-rest-auth for authentication and tokenization of users. To use the Course management page first of all each user should register their account with name, username, year of study, email id and identity whether he/she is a teacher or a student and then login with username,password and correct identity whether teacher or student(this is done to avoid confusion when a teaching assistant (teacher) who can also be a student for other courses) which then takes to the respective home pages .Home page contains profile option where they can see their details
 
 ### Courses and Assignments
 We divided the courses to core courses and additional courses(like minors) .Core courses are accessible to all the students and teachers whereas minor courses i.e additional courses can be created by teachers specifying codes to register for the course while creating .Students can use theese code (which should be communicated using other forms) to enroll the course 
 Teachers can upload assignments  in the all the core courses and additional courses created by them and can specify the submission file type for students
-Students can dowload the 
-The teacher can create courses, assignments within courses and assign teaching assistants with editable privileges. Deadlines and weightage can be set for assignments. The teacher can see which assignments are left for grading. Students can submit files into the assignment as long as deadline is pending, and download their submitted file any time.
+Students can dowload the assignments posted and submit solutions and view feedback 
 
-Announcements, Emails and Messaging
-The teacher (and possibly TAs) can make announcements (automated email to all enrolled in course) within all courses. Messaging between any 2 users is allowed (unless disabled for students by teacher).
+#### Create and enroll for courses:
+For teacher to create a course he should click on create course option in the navigation bar and enter the course name and course code ( He can also see the courses created )
+For a student to enroll a course he/she should enter the course code in the enroll course option on the home page
+
+#### Create assignments and upload solutions:
+For teacher to post assignment in core courses he can use the option Create Assignment in navigation bar and enter the assignment number(which should be unique for each assignment) select the course and extensions type for student submissions and to create for additional courses he can use the option Create Assignment-2 in navigation bar and follow the  same process.
+For student to view and submit solutions they should click on the course card and there they can see and download the assignments and have a submit option beside each assignment where they should enter assignment number and course name and upload files of specific types else they will get a message invalid file type
+
 
 Grading and Analysis
 Once the deadline is crossed, the teacher can either download all submissions and submit feedback (as a CSV) or opt for auto-grading and provide evaluate.sh and out.txt (following some restrictions) to grade the python files of the students. Grades will then be assigned to the students, and the teacher can view course statistics (average histogram) as well as individual assignment grades (marks histogram). Each student may also see their marks for the course or each assignment.

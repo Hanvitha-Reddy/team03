@@ -2,6 +2,15 @@
 Repository for the course project done as part of CS-251 (Software Systems Lab) course at IIT Bombay in Autumn 2022.
 A Course Management System similar to Moodle created by Subhash,Praneeth,Hanvitha .We used Django Framework for the backend and HTML,Bootstrap library for the frontend.
 
+## Basic Commands
+Open directory CS251 and then run commands
+python3 manage.py makemigrations
+python3 manage.py migrate
+python3 manage.py runserver
+
+## To view documentation:
+Cs251/docs/build/html/index.html
+
 ## Key Features:
 
 ### Authentication
@@ -26,17 +35,6 @@ When teacher clicked on the course cards he can see the submissions made by all 
 When clicked on the feedback option It asks for student name,Assignment number and they can give marks and any comments to students 
 All students can signup or login into the server using appropriate commands and credentials. Once they log in, they can view their marks and feedback if any in beside their submissions if the feedback column is empty that means submission is not yet graded
 
-
-### Basic Commands
-Run the commands from the project directory (containing manage.py)
-
-For back-end:
-virtualenv env
-source env/bin/activate
-pip install -r requirements.txt
-python3 manage.py makemigrations
-python3 manage.py migrate
-python3 manage.py runserver
 
 ### Overview of framework and libraries
 We have implemented a Django Rest  with the back-end using Django with a Django-REST framework. And for the front end we used HTML,Bootstrap.

@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+  </head>
+  <body>
+{% if user.is_authenticated %}
+   <!--Main Navigation-->
+   <header>
+    <!-- Sidebar -->
+    <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse bg-white">
+      <div class="position-sticky  col-md-6 col-lg-2 d-none d-md-block">
+        <div class="list-group list-group-flush mx-8 mt-4">
+          <br> <br>
+          <a href="./../home/" class="list-group-item list-group-item-action py-2 ripple active">
+            <i class="fas fa-chart-area fa-fw me-3"></i><span>Home</span>
+          </a>
+          <a href="./../profile/" class="list-group-item list-group-item-action py-2 ripple"><i
+              class="fas fa-lock fa-fw me-3"></i><span>Profile</span></a>
+          <a href="./../assignments_s" class="list-group-item list-group-item-action py-2 ripple">
+            <i class="fas fa-chart-pie fa-fw me-3"></i><span>Submitted Files</span>
+          </a>
+          <a href="./../view" class="list-group-item list-group-item-action py-2 ripple">
+            <i class="fas fa-chart-pie fa-fw me-3"></i><span>Assignments</span>
+          </a>
+          <a href="./../course_251/" class="list-group-item list-group-item-action py-2 ripple"><i
+              class="fas fa-globe fa-fw me-3"></i><span>CS-251</span></a>
+          <a href="./../course_215/" class="list-group-item list-group-item-action py-2 ripple"><i
+              class="fas fa-building fa-fw me-3"></i><span>CS-215</span></a>
+          <a href="./../course_293/" class="list-group-item list-group-item-action py-2 ripple"><i
+              class="fas fa-building fa-fw me-3"></i><span>CS-293</span></a>
+          <li class="list-group-item list-group-item-action py-2 ripple nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="./../assignments_s" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Additional Courses
+            </a>
+            <ul class="dropdown-menu">
+              {% for add in add_courses %}
+                 {% for create in create_courses %}
+                    {% if add.code == create.code %}
+                      {% if add.username == user.username %}
+                        <li><a class="dropdown-item" href="./../new_upload/">{{ create.course }}</a></li>
+                      {% endif %}
+                    {% endif %}
+                 {% endfor %}
+              {% endfor %}
+            </ul>
+          </li>
+        </div>
+      </div>
+    </nav>
+    <!-- Sidebar -->
+    <!-- Navbar -->
+    <nav id="main-navbar" class="navbar navbar-expand-lg navbar-light bg-white fixed-top">
+      <!-- Container wrapper -->
+      <div class="container-fluid">
+        <!-- Toggle button -->
+        <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#sidebarMenu"
+          aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+          <i class="fas fa-bars"></i>
+        </button>
+
+        <!-- Brand -->
+        <a class="navbar-brand" href="#">
+          <h3>{{ user.username }}</h3>
+        </a>
+      </div>
+      <!-- Container wrapper -->
+    </nav>
+    <!-- Navbar -->
+  </header>
+  <!--Main Navigation-->
+
+  <!--Main layout-->
+  <main style="margin-top: -22%;margin-left: 17%;">
+      <div class="row">
+        <div class="col-4">
+          <div class="card text-center" style = "margin-top: 52.5%;">
+            <div class="card-header">
+              Courses
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">Autumn (2022-1)</h5>
+              <p class="card-text"><h2>Software Systems Lab</h2></p>
+              <a href="./../course_251/" class="btn btn-primary"><b>CS-251</b></a>
+            </div>
+           
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="card text-center" style = "margin-top: 52.5%;">
+            <div class="card-header">
+              Courses
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">Autumn (2022-1)</h5>
+              <p class="card-text"><h2>Data Analysis</h2></p>
+              <a href="./../course_215/" class="btn btn-primary"><b>CS-215</b></a>
+            </div>
+          
+          </div>
+        </div>
+        <div class="col-4">
+          <h2>Enroll Course</h2>
+          <form method="post" enctype="multipart/form-data" style="margin-top: 20%;">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type='submit' class='btn btn-primary'>Enroll</button>
+          </form>
+          <div class="card text-center" style="margin-top: 36px;">
+            <div class="card-header">
+              Courses
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">Autumn (2022-1)</h5>
+              <p class="card-text"><h2>Data Structures</h2></p>
+              <a href="./../course_293/" class="btn btn-primary"><b>CS-293</b></a>
+            </div>
+       
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        {% for add in add_courses %}
+                 {% for create in create_courses %}
+                    {% if add.code == create.code %}
+                      {% if add.username == user.username %}
+                        <div class="col-4">
+                          <div class="card text-center" style = "margin-top: 10%;">
+                            <div class="card-header">
+                              Additional Courses
+                            </div>
+                            <div class="card-body">
+                              <h5 class="card-title">Autumn (2022-1)</h5>
+                              <p class="card-text"><h2>Teacher: {{ create.username }}</h2></p>
+                              <a href="./../courseview/" class="btn btn-primary"><b>{{ create.course }}</b></a>
+                            </div>
+                          </div>
+                        </div>
+                      {% endif %}
+                    {% endif %}
+                 {% endfor %}
+        {% endfor %}
+        </div>
+  </main>
+  <!--Main layout-->
+<center>  
+  <p><a href="./../logout/">
+    <button class="btn btn-dark btn-lg btn-block" type="button" style="margin-top: 170px;">Logout</button>
+  </a>
+  </p>
+</center>
+{% else %}
+  <p>You are not logged in</p>
+  <a href="{% url 'accounts:login' %}">Log In</a>
+{% endif %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+</body>
+</html>

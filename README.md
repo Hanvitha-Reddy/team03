@@ -1,6 +1,6 @@
 # team03
 Repository for the course project done as part of CS-251 (Software Systems Lab) course at IIT Bombay in Autumn 2022.
-A Course Management System similar to Moodle created by Subhash,Praneeth,Hanvitha .We used Django Framework for the backend and HTML library for the frontend.
+A Course Management System similar to Moodle created by Subhash,Praneeth,Hanvitha .We used Django Framework for the backend and HTML,Bootstrap library for the frontend.
 
 ## Key Features:
 
@@ -21,13 +21,13 @@ For teacher to post assignment in core courses he can use the option Create Assi
 For student to view and submit solutions they should click on the course card and there they can see and download the assignments and have a submit option beside each assignment where they should enter assignment number and course name and upload files of specific types else they will get a message invalid file type
 
 
-Grading and Analysis
-Once the deadline is crossed, the teacher can either download all submissions and submit feedback (as a CSV) or opt for auto-grading and provide evaluate.sh and out.txt (following some restrictions) to grade the python files of the students. Grades will then be assigned to the students, and the teacher can view course statistics (average histogram) as well as individual assignment grades (marks histogram). Each student may also see their marks for the course or each assignment.
+### Grading and Feedback
+When teacher clicked on the course cards he can see the submissions made by all students with Assignments numbers and have an option to downloads files and give feedback
+When clicked on the feedback option It asks for student name,Assignment number and they can give marks and any comments to students 
+All students can signup or login into the server using appropriate commands and credentials. Once they log in, they can view their marks and feedback if any in beside their submissions if the feedback column is empty that means submission is not yet graded
 
-CLI
-All students can signup or login into the server using appropriate commands and credentials. Once they log in, they can view their grades for each course, access new course and submit files for an assignment.
 
-Basic Commands
+### Basic Commands
 Run the commands from the project directory (containing manage.py)
 
 For back-end:
@@ -37,13 +37,8 @@ pip install -r requirements.txt
 python3 manage.py makemigrations
 python3 manage.py migrate
 python3 manage.py runserver
-For front-end:
-npm i
-npm start
-For cli (requires back-end running):
-python3 cli.py
-Overview of framework and libraries
-We have implemented a Django Rest API with the back-end using Django with a Django-REST framework. The frontend uses JavaScript along with React library combined with Redux. The CLI uses Prompt Toolkit and Requests module. The complete list of frameworks and libraries for backend can be found in requirements.txt, and for the frontend can be found in package.json.
 
-Reference for boilerplate
-YouTube
+### Overview of framework and libraries
+We have implemented a Django Rest  with the back-end using Django with a Django-REST framework. And for the front end we used HTML,Bootstrap.
+
+

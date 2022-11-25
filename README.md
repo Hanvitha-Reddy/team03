@@ -7,6 +7,7 @@ We used Django Framework for the backend and HTML,Bootstrap library for the fron
 Open directory CS251 and then run commands <br>
 python3 manage.py makemigrations <br>
 python3 manage.py migrate <br>
+python3 manage.py migrate --run-syncdb <br>
 python3 manage.py runserver <br>
 
 ## To view documentation:

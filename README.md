@@ -30,14 +30,16 @@ For a student to enroll a course he/she should enter the course code in the enro
 #### Create assignments and upload solutions:
 For teacher to post assignment in core courses he can use the option Create Assignment in navigation bar and enter the assignment number(which should be unique for each assignment) select the course and extensions type for student submissions. 
 And to create for additional courses he can use the option Create Assignment-2 in navigation bar and follow the same process.
-For student to view assignment and submit solutions they should click on the respective course card and there they can see and download the assignments and have a submit option beside each assignment where they should enter assignment number and course name and upload files of specific types else they will get a message "invalid file type"
+For student to view assignment and submit solutions they should click on Assignments in the navigation bar and there they can see and download the assignments and have a submit option beside each assignment where they should enter assignment number and course name and upload files of specific types else they will get a message "invalid file type"
 
 
 ### Grading and Feedback
 When teacher clicked on the course cards he can see the all submissions made by students with Assignments numbers and have an option to downloads files and give feedback
 When clicked on the feedback option It asks for student name,Assignment number and they can give marks and any comments to students 
-All students can signup or login into the server using appropriate commands and credentials. Once they log in, they can view their marks and feedback if any in beside their submissions if the feedback column is empty that means submission is not yet graded
+All students can signup or login into the server using appropriate commands and credentials. Once they log in, they can view their marks and feedback if any in beside their submissions in the respective course cards, if the feedback column is empty that means submission is not yet graded
 
+### Checking file format
+When teacher is creating an assignment there they can see an option to upload a text file (to specify the Tree Directory for zip files) and when students tries to upload  a file with different file network it shows an error "invalid Tree Directory" and for files of different type there is no need to upload a file to check
 
 ### Overview of framework and libraries
 We have implemented with the back-end using Django with a Django-REST framework. And for the front end we used HTML,Bootstrap.
